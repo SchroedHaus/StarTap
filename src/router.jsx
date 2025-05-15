@@ -8,10 +8,45 @@ import UserProfile from "./components/UserProfile";
 import ReviewRequest from "./components/ReviewRequest";
 
 export const router = createBrowserRouter([
-  { path: "/", element: <App /> },
-  { path: "/signup", element: <Signup /> },
-  { path: "/signin", element: <Signin /> },
-  { path: "/dashboard", element: <PrivateRoute><Dashboard /></PrivateRoute>},
-  { path: "/profile", element: <PrivateRoute><UserProfile /></PrivateRoute>},
-  { path: "/review-request", element: <PrivateRoute><ReviewRequest /></PrivateRoute>},
+  {
+    path: "/",
+    element: <App />,
+    children: [
+      { path: "/signup",
+        element: <Signup />
+      },
+
+      { path: "/signin",
+        element: <Signin />
+      },
+
+      {
+        path: "/dashboard",
+        element: (
+          <PrivateRoute>
+            <Dashboard />
+          </PrivateRoute>
+        ),
+      },
+
+      {
+        path: "/profile",
+        element: (
+          <PrivateRoute>
+            <UserProfile />
+          </PrivateRoute>
+        ),
+      },
+
+      {
+        path: "/review-request",
+        element: (
+          <PrivateRoute>
+            <ReviewRequest />
+          </PrivateRoute>
+        ),
+      },
+
+    ],
+  },
 ]);

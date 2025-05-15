@@ -28,7 +28,7 @@ const ReviewRequest = () => {
     fetchProfile();
   }, [session]);
 
-  const reviewText = `${defaultMessage ? defaultMessage + " " : ""}Leave us a review: ${googleReviewLink}`;
+  const reviewText = `${defaultMessage ? defaultMessage + "\n" : ""}Leave us a review: ${googleReviewLink}`;
 
   const sendSMS = () => {
     window.location.href = `sms:?&body=${encodeURIComponent(reviewText)}`;
@@ -48,11 +48,18 @@ const ReviewRequest = () => {
   };
 
   return (
-    <div>
+    <div className="flex flex-col place-content-center items-center">
+      <img className="min-w-20 pb-6" src="/vite.svg" />
       <h2>Request a Google Business Profile Review</h2>
-      <button onClick={sendSMS}>Send SMS</button>
-      <button onClick={sendWhatsApp}>Send WhatsApp Message</button>
-      <button onClick={sendEmail}>Send Email</button>
+      <button className="mt-6 max-w-80 min-w-80" onClick={sendSMS}>
+        Send SMS
+      </button>
+      <button className="mt-6 max-w-80 min-w-80" onClick={sendWhatsApp}>
+        Send WhatsApp Message
+      </button>
+      <button className="mt-6 max-w-80 min-w-80" onClick={sendEmail}>
+        Send Email
+      </button>
     </div>
   );
 };

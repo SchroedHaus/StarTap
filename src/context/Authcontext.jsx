@@ -51,14 +51,6 @@ export const AuthContextProvider = ({ children }) => {
     }
   };
 
-  // Sign out
-  const signOut = async () => {
-    const { error } = await supabase.auth.signOut();
-    if (error) {
-      console.error("There was an error: ", error);
-    }
-  };
-
   useEffect(() => {
     // Fetch the session on initial load
     const initSession = async () => {
@@ -84,7 +76,7 @@ export const AuthContextProvider = ({ children }) => {
   }, []);
 
   return (
-    <AuthContext.Provider value={{ session, loading,signUpNewUser, signInUser, signOut }}>{children}</AuthContext.Provider>
+    <AuthContext.Provider value={{ session, loading, signUpNewUser, signInUser }}>{children}</AuthContext.Provider>
   );
 };
 
