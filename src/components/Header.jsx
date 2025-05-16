@@ -45,21 +45,20 @@ const Header = () => {
       {/* Mobile Nav */}
       {menuOpen && (
         <div className="md:hidden bg-white shadow-lg px-4 py-4 space-y-2 text-gray-700">
-          <a href="#" className="block hover:text-indigo-600">
-            Home
+          <a href="/profile" className="block hover:text-indigo-600">
+            Profile
           </a>
-          <a href="#" className="block hover:text-indigo-600">
-            About
+          <a href="/review-request" className="block hover:text-indigo-600">
+            Request Review
           </a>
           <a
             onClick={() => handleSignOut(navigate)}
-            className="block hover:text-indigo-600"
+            className="cursor-pointer
+        hover:text-indigo-600 block"
           >
             Sign Out
           </a>
-          <a href="#" className="block hover:text-indigo-600">
-            Contact
-          </a>
+          
         </div>
       )}
     </header>
