@@ -1,15 +1,17 @@
 import React, { useState, useEffect } from "react";
 import { supabase } from "../supabaseClient";
 import { userAuth } from "../context/Authcontext";
-import { Link } from "react-router-dom";
 
 const UserProfile = () => {
   const { session } = userAuth();
   const [profile, setProfile] = useState({
     name: "",
     message: "",
-    avatar_url: "",
+    review_link: "",
+    logo_url: "",
   });
+  const [originalLogoUrl, setOriginalLogoUrl] = useState("");
+  const [newLogoPath, setNewLogoPath] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
@@ -31,6 +33,7 @@ const UserProfile = () => {
       setError("Error fetching profile: " + error.message);
     } else {
       setProfile(data);
+      setOriginalLogoUrl(data.logo_url || "");
     }
     setLoading(false);
   };
@@ -38,6 +41,16 @@ const UserProfile = () => {
   const updateProfile = async (e) => {
     e.preventDefault();
     setLoading(true);
+
+    // Remove previous logo from storage if:
+    // - It existed before
+    // - and it's been removed or replaced
+    if (originalLogoUrl && originalLogoUrl !== profile.logo_url) {
+      const parts = originalLogoUrl.split("/");
+      const oldPath = parts.slice(-2).join("/").split("?")[0];
+      await supabase.storage.from("company-logos").remove([oldPath]);
+    }
+
     const { error } = await supabase
       .from("profiles")
       .upsert({ id: session.user.id, ...profile });
@@ -46,8 +59,53 @@ const UserProfile = () => {
       setError("Error updating profile: " + error.message);
     } else {
       setError("");
+      setOriginalLogoUrl(profile.logo_url || "");
+      setNewLogoPath("");
     }
+
     setLoading(false);
+  };
+
+  const handleLogoUpload = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    const fileExt = file.name.split(".").pop();
+    const uniqueSuffix = `${Date.now()}`;
+    const filePath = `${session.user.id}/company-logo-${uniqueSuffix}.${fileExt}`;
+
+    let { error: uploadError } = await supabase.storage
+      .from("company-logos")
+      .upload(filePath, file, {
+        cacheControl: "3600",
+        upsert: true,
+      });
+
+    if (uploadError) {
+      setError("Error uploading logo: " + uploadError.message);
+      return;
+    }
+
+    const { data: publicUrlData } = supabase.storage
+      .from("company-logos")
+      .getPublicUrl(filePath);
+
+    const logoUrl = `${publicUrlData.publicUrl}?t=${Date.now()}`;
+
+    setProfile((prev) => ({
+      ...prev,
+      logo_url: logoUrl,
+    }));
+
+    setNewLogoPath(filePath);
+  };
+
+  const handleRemoveLogo = () => {
+    // Just clear from UI, but keep the actual deletion for Save
+    setProfile((prev) => ({
+      ...prev,
+      logo_url: "",
+    }));
   };
 
   const handleChange = (e) => {
@@ -58,85 +116,97 @@ const UserProfile = () => {
     }));
   };
 
-  const handleImageUpload = async (e) => {
-    const file = e.target.files[0];
-    if (!file) {
-      setError("No file selected");
-      return;
-    }
-
-    const fileExt = file.name.split(".").pop();
-    const fileName = `${session.user.id}.${fileExt}`;
-    const filePath = `public/${fileName}`;
-
-    setLoading(true);
-
-    const { error: uploadError } = await supabase.storage
-      .from("profile-images")
-      .upload(filePath, file);
-
-    if (uploadError) {
-      setError("Error uploading image: " + uploadError.message);
-      setLoading(false);
-      return;
-    }
-
-    const {
-      data: { publicUrl },
-      error: urlError,
-    } = supabase.storage.from("profile-images").getPublicUrl(filePath);
-
-    if (urlError) {
-      setError("Error getting public URL: " + urlError.message);
-      setLoading(false);
-      return;
-    }
-
-    setProfile((prevProfile) => ({
-      ...prevProfile,
-      avatar_url: publicUrl,
-    }));
-
-    setLoading(false);
-  };
-
   return (
-    <div>
-      <h2>User Profile</h2>
-      {error && <p className="error">{error}</p>}
-      <form onSubmit={updateProfile}>
-        <label>
-          Name:
+    <div className="flex flex-col place-content-center items-left max-w-80">
+      <h2 className="font-bold text-2xl pt-6">User Profile</h2>
+      {error && <p className="text-red-600 mt-2">{error}</p>}
+      <form
+        onSubmit={updateProfile}
+        className="flex flex-col place-content-center items-left"
+      >
+        <div className="mt-6">
+          <label className="block text-sm font-medium text-gray-700 mb-2">
+            Company Logo:
+          </label>
+
+          <div className="flex flex-col items-center gap-4">
+            <img
+              src={profile.logo_url || "/logoPlaceholder.png"}
+              alt="Company Logo"
+              className="w-[300px] h-[200px] object-contain border rounded"
+            />
+
+            <label
+              htmlFor="logo-upload"
+              className="cursor-pointer px-4 py-2 bg-blue-600 text-white text-sm rounded text-center hover:bg-blue-700 transition"
+            >
+              Upload Logo
+            </label>
+            {profile.logo_url && (
+              <button
+                type="button"
+                onClick={handleRemoveLogo}
+                className="mt-2 text-sm text-red-600 hover:underline"
+              >
+                Remove Logo
+              </button>
+            )}
+          </div>
+
           <input
-            type="text"
-            name="name"
-            value={profile.name}
-            onChange={handleChange}
+            id="logo-upload"
+            type="file"
+            accept="image/*"
+            onChange={handleLogoUpload}
+            className="hidden"
           />
-        </label>
-        <label>
-          Default Message:
-          <textarea name="message" value={profile.message} onChange={handleChange} />
-        </label>
-        <label>
-          Profile Image:
-          <input type="file" onChange={handleImageUpload} />
-        </label>
-        {profile.avatar_url && (
-          <img src={profile.avatar_url} alt="Profile" width="150" />
-        )}
-        <button type="submit" disabled={loading}>
-          {loading ? "Loading..." : "Update Profile"}
+        </div>
+
+        <div className="mt-6">
+          <label>
+            Name:
+            <input
+              type="text"
+              name="name"
+              value={profile.name}
+              onChange={handleChange}
+              className="w-full border rounded-sm p-2"
+            />
+          </label>
+        </div>
+        <div className="mt-6">
+          <label>
+            Default Message:
+            <textarea
+              name="message"
+              value={profile.message}
+              onChange={handleChange}
+              className="border w-full h-60 p-2 rounded-sm"
+            />
+          </label>
+        </div>
+
+        <div className="mt-6">
+          <label>
+            Review Link:
+            <input
+              type="text"
+              name="review_link"
+              value={profile.review_link}
+              onChange={handleChange}
+              className="w-full border rounded-sm p-2"
+            />
+          </label>
+        </div>
+
+        <button
+          type="submit"
+          disabled={loading}
+          className="mt-6 h-[59px] w-full bg-green-600 text-white rounded hover:bg-green-700 transition"
+        >
+          {loading ? "Loading..." : "SAVE CHANGES"}
         </button>
       </form>
-      <button>
-        {" "}
-        <Link to="/review-request">Send a request</Link>
-      </button>
-      <button>
-        {" "}
-        <Link to="/dashboard">Go to dashboard</Link>
-      </button>
     </div>
   );
 };

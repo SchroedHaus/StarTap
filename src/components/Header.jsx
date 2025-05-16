@@ -31,9 +31,6 @@ const Header = () => {
           >
             Sign Out
           </a>
-          <a href="#" className="hover:text-indigo-600">
-            Contact
-          </a>
         </nav>
 
         {/* Mobile Menu Button */}

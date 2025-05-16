@@ -5,8 +5,8 @@ import { supabase } from "../supabaseClient";
 const ReviewRequest = () => {
   const { session } = userAuth();
   const [defaultMessage, setDefaultMessage] = useState("");
-
-  const googleReviewLink = "https://g.page/r/CODE/review"; // Replace 'CODE' with your Google Business Profile code
+  const [logo, setLogo] = useState("");
+  const [reviewLink, setReviewLink] = useState("");
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -14,7 +14,7 @@ const ReviewRequest = () => {
 
       const { data, error } = await supabase
         .from("profiles")
-        .select("message")
+        .select("message, logo_url, review_link")
         .eq("id", session.user.id)
         .single();
 
@@ -22,13 +22,15 @@ const ReviewRequest = () => {
         console.error("Error fetching message: ", error.message);
       } else {
         setDefaultMessage(data.message || "");
+        setLogo(data.logo_url);
+        setReviewLink(data.review_link);
       }
     };
 
     fetchProfile();
   }, [session]);
 
-  const reviewText = `${defaultMessage ? defaultMessage + "\n" : ""}Leave us a review: ${googleReviewLink}`;
+  const reviewText = `${defaultMessage ? defaultMessage + "\n" : ""}Leave us a review: ${reviewLink}`;
 
   const sendSMS = () => {
     window.location.href = `sms:?&body=${encodeURIComponent(reviewText)}`;
@@ -48,17 +50,20 @@ const ReviewRequest = () => {
   };
 
   return (
-    <div className="flex flex-col place-content-center items-center">
-      <img className="min-w-20 pb-6" src="/vite.svg" />
+    <div className="flex flex-col items-center w-full max-w-[360px]">
+      <img className="max-w-[300px] max-h-[200px] object-cover pt-6 pb-6" src={logo}/>
       <h2>Request a Google Business Profile Review</h2>
-      <button className="mt-6 max-w-80 min-w-80" onClick={sendSMS}>
-        Send SMS
+      <button className="mt-6 w-full h-[59px]" onClick={sendSMS}>
+        SEND BY TEXT
       </button>
-      <button className="mt-6 max-w-80 min-w-80" onClick={sendWhatsApp}>
-        Send WhatsApp Message
+      <button
+        className="mt-6 w-full h-[59px]"
+        onClick={sendWhatsApp}
+      >
+        SEND BY WHATSAPP
       </button>
-      <button className="mt-6 max-w-80 min-w-80" onClick={sendEmail}>
-        Send Email
+      <button className="mt-6 w-full h-[59px]" onClick={sendEmail}>
+        SEND BY EMAIL
       </button>
     </div>
   );

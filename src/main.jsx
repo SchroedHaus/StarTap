@@ -8,7 +8,7 @@ import { AuthContextProvider } from "./context/Authcontext.jsx";
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
-    <h1 className="text-center pt-4 text-3xl">React Supabase Auth & Context</h1>
+    <h1 className="pt-20 text-center text-x1">StarTap</h1>
     <AuthContextProvider>
       <RouterProvider router={router} />
     </AuthContextProvider>
