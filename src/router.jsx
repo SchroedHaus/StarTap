@@ -12,13 +12,10 @@ export const router = createBrowserRouter([
     path: "/",
     element: <App />,
     children: [
-      { path: "/signup",
-        element: <Signup />
-      },
+      { index: true, element: <Signup /> },
+      { path: "/signup", element: <Signup /> },
 
-      { path: "/signin",
-        element: <Signin />
-      },
+      { path: "/signin", element: <Signin /> },
 
       {
         path: "/dashboard",
@@ -46,7 +43,6 @@ export const router = createBrowserRouter([
           </PrivateRoute>
         ),
       },
-
     ],
   },
 ]);
