@@ -8,7 +8,6 @@ import { AuthContextProvider } from "./context/Authcontext.jsx";
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
-    <h1 className="pt-20 text-center text-x1">StarTap</h1>
     <AuthContextProvider>
       <RouterProvider router={router} />
     </AuthContextProvider>

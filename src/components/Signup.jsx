@@ -29,8 +29,9 @@ const Signup = () => {
   };
 
   return (
-    <div>
-      <form onSubmit={handleSignUp} action="" className="max-w-md m-auto pt-24">
+    <div className="flex flex-col items-center">
+      <img className="size-60" src="/Star Tap Logo.png" alt="" />
+      <form onSubmit={handleSignUp} action="" className="max-w-md m-auto pt-5">
         <h2 className="font-bold pb-2">Sign up today!</h2>
         <p>
           Already have an account?
@@ -49,7 +50,7 @@ const Signup = () => {
             className="p-3 mt-6 w-full"
             type="password"
           />
-          <button type="submit" disabled={loading} className="mt-6 w-full">
+          <button type="submit" disabled={loading} className="mt-6 w-full h-[59px]">
             Sign up!
           </button>
           {error && <p className="text-red-600 text-center pt-4">{error}</p>}
