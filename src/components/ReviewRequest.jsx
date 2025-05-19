@@ -5,7 +5,7 @@ import { supabase } from "../supabaseClient";
 const ReviewRequest = () => {
   const { session } = userAuth();
   const [defaultMessage, setDefaultMessage] = useState("");
-  const [logo, setLogo] = useState("");
+  const [logo, setLogo] = useState();
   const [reviewLink, setReviewLink] = useState("");
 
   useEffect(() => {
@@ -51,7 +51,7 @@ const ReviewRequest = () => {
 
   return (
     <div className="flex flex-col items-center w-full max-w-[360px]">
-      <img className="max-w-[300px] max-h-[200px] object-cover pt-6 pb-6" src={logo}/>
+      <img className="max-w-[300px] max-h-[200px] object-cover pt-6 pb-6" src={logo} />
       <h2>Request a Google Business Profile Review</h2>
       <button className="mt-6 w-full h-[59px]" onClick={sendSMS}>
         SEND BY TEXT
