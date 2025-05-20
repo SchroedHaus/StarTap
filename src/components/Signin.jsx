@@ -19,7 +19,7 @@ const Signin = () => {
       const result = await signInUser(email, password);
 
       if (result.success) {
-        navigate("/profile");
+        navigate("/review-request");
       }
     } catch (error) {
       setError("An error occurred: " + error.message);
