@@ -3,12 +3,14 @@ import { userAuth } from "../context/Authcontext";
 import { supabase } from "../supabaseClient";
 import QRCode from "react-qr-code";
 import { X } from "lucide-react";
+import Button from "./Button";
 
 const ReviewRequest = () => {
   const { session } = userAuth();
   const [defaultMessage, setDefaultMessage] = useState("");
   const [logo, setLogo] = useState();
   const [reviewLink, setReviewLink] = useState("");
+  const [signature, setSignature] = useState("");
   const [showQR, setShowQR] = useState(false); // <- New state for overlay
 
   useEffect(() => {
@@ -17,7 +19,7 @@ const ReviewRequest = () => {
 
       const { data, error } = await supabase
         .from("profiles")
-        .select("message, logo_url, review_link")
+        .select("message, logo_url, review_link, signature")
         .eq("id", session.user.id)
         .single();
 
@@ -27,15 +29,15 @@ const ReviewRequest = () => {
         setDefaultMessage(data.message || "");
         setLogo(data.logo_url);
         setReviewLink(data.review_link);
+        setSignature(data.signature);
       }
     };
 
     fetchProfile();
   }, [session]);
 
-  const reviewText = `${
-    defaultMessage ? defaultMessage + "\n" : ""
-  }Leave us a review: ${reviewLink}`;
+  const reviewText = `${defaultMessage ? defaultMessage + "\n" : ""}
+    ${reviewLink}\n${signature}`;
 
   const sendSMS = () => {
     window.location.href = `sms:?&body=${encodeURIComponent(reviewText)}`;
@@ -63,19 +65,17 @@ const ReviewRequest = () => {
           alt="Business logo"
         />
       )}
-      <h2>Request a Google Business Profile Review</h2>
-      <button className="mt-6 w-full h-[59px]" onClick={sendSMS}>
+      <h2>Request a Review</h2>
+      <Button className="mt-6 w-full h-[59px]" onClick={sendSMS}>
         SEND BY TEXT
-      </button>
-      <button className="mt-6 w-full h-[59px]" onClick={sendWhatsApp}>
+      </Button>
+      <Button className="mt-6 w-full h-[59px]" onClick={sendWhatsApp}>
         SEND BY WHATSAPP
-      </button>
-      <button className="mt-6 w-full h-[59px]" onClick={sendEmail}>
+      </Button>
+      <Button className="mt-6 w-full h-[59px]" onClick={sendEmail}>
         SEND BY EMAIL
-      </button>
-      <button className="mt-6 w-full h-[59px]" onClick={() => setShowQR(true)}>
-        SCAN QR CODE
-      </button>
+      </Button>
+      <Button onClick={() => setShowQR(true)}>SCAN QR CODE</Button>
 
       {/* QR Code Overlay */}
       {showQR && (

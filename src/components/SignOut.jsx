@@ -1,6 +1,4 @@
 // SignOut.jsx
-import { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
 import { supabase } from "../supabaseClient";
 
 export const handleSignOut = async (navigate) => {

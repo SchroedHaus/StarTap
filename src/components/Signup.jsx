@@ -8,9 +8,8 @@ const Signup = () => {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState("");
 
-  const { session, signUpNewUser } = userAuth();
+  const { signUpNewUser } = userAuth();
   const navigate = useNavigate();
-  console.log(session);
 
   const handleSignUp = async (e) => {
     e.preventDefault();

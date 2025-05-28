@@ -8,9 +8,8 @@ const Signin = () => {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const { session, signInUser } = userAuth();
+  const { signInUser } = userAuth();
   const navigate = useNavigate();
-  console.log(session);
 
   const handleSignIn = async (e) => {
     e.preventDefault();

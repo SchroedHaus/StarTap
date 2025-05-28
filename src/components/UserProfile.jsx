@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { supabase } from "../supabaseClient";
 import { userAuth } from "../context/Authcontext";
+import Button from "./Button";
 
 const UserProfile = () => {
   const { session } = userAuth();
@@ -117,7 +118,7 @@ const UserProfile = () => {
   };
 
   return (
-    <div className="flex flex-col place-content-center items-left max-w-80">
+    <div className="flex flex-col place-content-center items-left max-w-80 pb-20">
       <h2 className="font-bold text-2xl pt-6">User Profile</h2>
       {error && <p className="text-red-600 mt-2">{error}</p>}
       <form
@@ -125,9 +126,7 @@ const UserProfile = () => {
         className="flex flex-col place-content-center items-left"
       >
         <div className="mt-6">
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            Company Logo:
-          </label>
+          <label>Company Logo:</label>
 
           <div className="flex flex-col items-center gap-4">
             <img
@@ -146,7 +145,7 @@ const UserProfile = () => {
               <button
                 type="button"
                 onClick={handleRemoveLogo}
-                className="mt-2 text-sm text-red-600 hover:underline"
+                className="cursor-pointer px-4 py-2 bg-blue-600 text-white text-sm rounded text-center hover:bg-blue-700 transition"
               >
                 Remove Logo
               </button>
@@ -198,14 +197,25 @@ const UserProfile = () => {
             />
           </label>
         </div>
-
-        <button
+        <div className="mt-6">
+          <label>
+            Signature:
+            <textarea
+              type="text"
+              name="signature"
+              value={profile.signature}
+              onChange={handleChange}
+              className="border w-full h-20 p-2 rounded-sm"
+            />
+          </label>
+        </div>
+        <Button
           type="submit"
           disabled={loading}
-          className="mt-6 h-[59px] w-full bg-green-600 text-white rounded hover:bg-green-700 transition"
+          className="mt-6 h-[59px] w-full"
         >
           {loading ? "Loading..." : "SAVE CHANGES"}
-        </button>
+        </Button>
       </form>
     </div>
   );
