@@ -36,8 +36,7 @@ const ReviewRequest = () => {
     fetchProfile();
   }, [session]);
 
-  const reviewText = `${defaultMessage ? defaultMessage + "\n" : ""}
-    ${reviewLink}\n${signature}`;
+  const reviewText = `${defaultMessage ? defaultMessage : ""}`;
 
   const sendSMS = () => {
     window.location.href = `sms:?&body=${encodeURIComponent(reviewText)}`;
@@ -66,16 +65,24 @@ const ReviewRequest = () => {
         />
       )}
       <h2>Request a Review</h2>
-      <Button className="mt-6 w-full h-[59px]" onClick={sendSMS}>
+      <Button className="mt-6 w-full h-[59px] bg-[#c0c0c0]" onClick={sendSMS}>
         SEND BY TEXT
       </Button>
-      <Button className="mt-6 w-full h-[59px]" onClick={sendWhatsApp}>
+      <Button
+        className="mt-6 w-full h-[59px] bg-[#c0c0c0]"
+        onClick={sendWhatsApp}
+      >
         SEND BY WHATSAPP
       </Button>
-      <Button className="mt-6 w-full h-[59px]" onClick={sendEmail}>
+      <Button className="mt-6 w-full h-[59px] bg-[#c0c0c0]" onClick={sendEmail}>
         SEND BY EMAIL
       </Button>
-      <Button onClick={() => setShowQR(true)}>SCAN QR CODE</Button>
+      <Button
+        onClick={() => setShowQR(true)}
+        className="mt-6 w-full h-[59px] bg-[#c0c0c0]"
+      >
+        SCAN QR CODE
+      </Button>
 
       {/* QR Code Overlay */}
       {showQR && (

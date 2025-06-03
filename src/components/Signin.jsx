@@ -19,6 +19,8 @@ const Signin = () => {
 
       if (result.success) {
         navigate("/review-request");
+      } else {
+        setError("Invalid Credentials. Try Signing Up.");
       }
     } catch (error) {
       setError("An error occurred: " + error.message);
@@ -40,16 +42,20 @@ const Signin = () => {
           <input
             onChange={(e) => setEmail(e.target.value)}
             placeholder="Email"
-            className="p-3 mt-6 w-full"
+            className="p-3 mt-6 w-full bg-blue-100"
             type="email"
           />
           <input
             onChange={(e) => setPassword(e.target.value)}
             placeholder="Password"
-            className="p-3 mt-6 w-full"
+            className="p-3 mt-6 w-full bg-blue-100"
             type="password"
           />
-          <button type="submit" disabled={loading} className="mt-6 w-full h-[59px]">
+          <button
+            type="submit"
+            disabled={loading}
+            className="mt-6 w-full h-[59px] bg-[#c0c0c0]"
+          >
             Sign in!
           </button>
           {error && <p className="text-red-600 text-center pt-4">{error}</p>}

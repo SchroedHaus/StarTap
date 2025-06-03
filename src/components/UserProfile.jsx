@@ -31,7 +31,7 @@ const UserProfile = () => {
       .single();
 
     if (error) {
-      setError("Error fetching profile: " + error.message);
+      setError("Update Your Profile");
     } else {
       setProfile(data);
       setOriginalLogoUrl(data.logo_url || "");
@@ -117,6 +117,44 @@ const UserProfile = () => {
     }));
   };
 
+  const handleDeleteAccount = async () => {
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+
+    if (error || !user) {
+      alert("User not authenticated");
+      return;
+    }
+
+    const {
+      data: { session },
+    } = await supabase.auth.getSession();
+
+    const accessToken = session?.access_token;
+
+    const response = await fetch(
+      "https://yguhpjjcpkwrwuxwawct.supabase.co/functions/v1/delete-user",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
+        },
+        body: JSON.stringify({ user_id: user.id }),
+      }
+    );
+
+    const result = await response.json();
+
+    if (response.ok) {
+      await supabase.auth.signOut();
+      alert("Account deleted successfully.");
+    } else {
+      alert("Error deleting account: " + result.error);
+    }
+  };
+
   return (
     <div className="flex flex-col place-content-center items-left max-w-80 pb-20">
       <h2 className="font-bold text-2xl pt-6">User Profile</h2>
@@ -134,44 +172,30 @@ const UserProfile = () => {
               alt="Company Logo"
               className="w-[300px] h-[200px] object-contain border rounded"
             />
-
             <label
               htmlFor="logo-upload"
               className="cursor-pointer px-4 py-2 bg-blue-600 text-white text-sm rounded text-center hover:bg-blue-700 transition"
             >
               Upload Logo
             </label>
+            <input
+              id="logo-upload"
+              type="file"
+              accept="image/*"
+              onChange={handleLogoUpload}
+              className="hidden"
+            />
+
             {profile.logo_url && (
-              <button
+              <a
                 type="button"
                 onClick={handleRemoveLogo}
-                className="cursor-pointer px-4 py-2 bg-blue-600 text-white text-sm rounded text-center hover:bg-blue-700 transition"
+                className="cursor-pointer px-4 py-2 text-center underline"
               >
                 Remove Logo
-              </button>
+              </a>
             )}
           </div>
-
-          <input
-            id="logo-upload"
-            type="file"
-            accept="image/*"
-            onChange={handleLogoUpload}
-            className="hidden"
-          />
-        </div>
-
-        <div className="mt-6">
-          <label>
-            Name:
-            <input
-              type="text"
-              name="name"
-              value={profile.name}
-              onChange={handleChange}
-              className="w-full border rounded-sm p-2"
-            />
-          </label>
         </div>
         <div className="mt-6">
           <label>
@@ -180,43 +204,41 @@ const UserProfile = () => {
               name="message"
               value={profile.message}
               onChange={handleChange}
-              className="border w-full h-60 p-2 rounded-sm"
-            />
+              className="border w-full h-80 p-2 rounded-sm"
+              placeholder={`Thank you for your business.\n\nIt was a pleasure working with you.\n\nPlease leave us a review:\nhttps://yourgooglebusinessprofile.com\n\nThank You,\nYour Name
+                `}
+            ></textarea>
           </label>
         </div>
 
         <div className="mt-6">
           <label>
-            Review Link:
+            Review Link for QR Code:
             <input
               type="text"
               name="review_link"
               value={profile.review_link}
               onChange={handleChange}
               className="w-full border rounded-sm p-2"
-            />
-          </label>
-        </div>
-        <div className="mt-6">
-          <label>
-            Signature:
-            <textarea
-              type="text"
-              name="signature"
-              value={profile.signature}
-              onChange={handleChange}
-              className="border w-full h-20 p-2 rounded-sm"
+              placeholder="https://yourgooglebusinessprofile.com"
             />
           </label>
         </div>
         <Button
           type="submit"
           disabled={loading}
-          className="mt-6 h-[59px] w-full"
+          className="mt-6 h-[59px] w-full bg-[#c0c0c0]"
         >
           {loading ? "Loading..." : "SAVE CHANGES"}
         </Button>
       </form>
+      <a
+        href="#"
+        onClick={handleDeleteAccount}
+        className="text-red-600 mt-6 cursor-pointer text-center underline"
+      >
+        Delete Account
+      </a>
     </div>
   );
 };
