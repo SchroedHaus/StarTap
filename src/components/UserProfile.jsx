@@ -15,12 +15,31 @@ const UserProfile = () => {
   const [newLogoPath, setNewLogoPath] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [isDirty, setIsDirty] = useState(false);
 
   useEffect(() => {
     if (session) {
       fetchProfile();
     }
   }, [session]);
+
+  useEffect(() => {
+    const handleBeforeUnload = (event) => {
+      if (isDirty) {
+        event.preventDefault();
+        event.returnValue = ""; // Required for Chrome
+      }
+    };
+
+    window.addEventListener("beforeunload", handleBeforeUnload);
+    return () => {
+      window.removeEventListener("beforeunload", handleBeforeUnload);
+    };
+  }, [isDirty]);
+
+
+
+
 
   const fetchProfile = async () => {
     setLoading(true);
@@ -63,8 +82,8 @@ const UserProfile = () => {
       setOriginalLogoUrl(profile.logo_url || "");
       setNewLogoPath("");
     }
-
     setLoading(false);
+    setIsDirty(false);
   };
 
   const handleLogoUpload = async (e) => {
@@ -99,6 +118,7 @@ const UserProfile = () => {
     }));
 
     setNewLogoPath(filePath);
+    setIsDirty(true);
   };
 
   const handleRemoveLogo = () => {
@@ -107,6 +127,7 @@ const UserProfile = () => {
       ...prev,
       logo_url: "",
     }));
+    setIsDirty(true);
   };
 
   const handleChange = (e) => {
@@ -115,6 +136,7 @@ const UserProfile = () => {
       ...prevProfile,
       [name]: value,
     }));
+    setIsDirty(true);
   };
 
   const handleDeleteAccount = async () => {
@@ -176,7 +198,7 @@ const UserProfile = () => {
               htmlFor="logo-upload"
               className="cursor-pointer px-4 py-2 bg-blue-600 text-white text-sm rounded text-center hover:bg-blue-700 transition"
             >
-              Upload Logo
+              {profile.logo_url? <p>Change Logo</p> : <p>Upload Logo</p>}
             </label>
             <input
               id="logo-upload"
@@ -190,7 +212,7 @@ const UserProfile = () => {
               <a
                 type="button"
                 onClick={handleRemoveLogo}
-                className="cursor-pointer px-4 py-2 text-center underline"
+                className="text-[14px] cursor-pointer px-4 py-2 text-center underline"
               >
                 Remove Logo
               </a>
