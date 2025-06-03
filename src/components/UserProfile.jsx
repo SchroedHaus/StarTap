@@ -215,7 +215,7 @@ const UserProfile = () => {
           <label>
             Review Link for QR Code:
             <input
-              type="text"
+              type="url"
               name="review_link"
               value={profile.review_link}
               onChange={handleChange}
