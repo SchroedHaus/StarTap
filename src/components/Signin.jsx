@@ -30,7 +30,7 @@ const Signin = () => {
   };
 
   return (
-    <div className="flex flex-col items-center">
+    <div className="flex flex-col items-center max-w-80 pb-20">
       <img className="size-60" src="/Star Tap Logo.png" alt="" />
       <form onSubmit={handleSignIn} action="" className="max-w-md m-auto pt-5">
         <h2 className="font-bold pb-2">Sign in!</h2>
