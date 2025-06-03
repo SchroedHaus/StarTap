@@ -56,7 +56,7 @@ const ReviewRequest = () => {
   };
 
   return (
-    <div className="flex flex-col items-center w-full max-w-[360px]">
+    <div className="flex flex-col items-center w-full max-w-[360px] pb-20">
       {logo && (
         <img
           className="max-w-[300px] max-h-[200px] object-cover pt-6 pb-6"
