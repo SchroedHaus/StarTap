@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+// Header.jsx
+import { useState } from "react";
 import { Menu, X } from "lucide-react";
 import { userAuth } from "../context/Authcontext";
 import { useNavigate } from "react-router-dom";

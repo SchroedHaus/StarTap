@@ -1,3 +1,4 @@
+// Signin.jsx
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { userAuth } from "../context/Authcontext";
@@ -31,7 +32,16 @@ const Signin = () => {
 
   return (
     <div className="flex flex-col items-center max-w-80 pb-20">
-      <img className="size-40" src="/Star Tap Logo.png" alt="" />
+      <img
+        className="size-40 block dark:hidden"
+        src="/StarTap Logo default.png"
+        alt=""
+      />
+      <img
+        className="size-40 hidden dark:block"
+        src="/StarTap Logo White.png"
+        alt=""
+      />
       <form onSubmit={handleSignIn} action="" className="max-w-md m-auto pt-5">
         <h2 className="font-bold pb-2">Sign in!</h2>
         <p>
@@ -54,7 +64,7 @@ const Signin = () => {
           <button
             type="submit"
             disabled={loading}
-            className="mt-6 w-full h-[59px] bg-[#c0c0c0]"
+            className="mt-6 w-full h-[59px] bg-[#c0c0c0] dark:text-black"
           >
             Sign in!
           </button>

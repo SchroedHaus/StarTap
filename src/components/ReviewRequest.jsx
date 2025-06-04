@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from "react";
+// ReviewRequest.jsx
+import { useEffect, useState } from "react";
 import { userAuth } from "../context/Authcontext";
 import { supabase } from "../supabaseClient";
 import QRCode from "react-qr-code";
@@ -62,21 +63,27 @@ const ReviewRequest = () => {
         />
       )}
       <h2>Request a Review</h2>
-      <Button className="mt-6 w-full h-[59px] bg-[#c0c0c0]" onClick={sendSMS}>
+      <Button
+        className="mt-6 w-full h-[59px] bg-[#c0c0c0] dark:text-black"
+        onClick={sendSMS}
+      >
         SEND BY TEXT
       </Button>
       <Button
-        className="mt-6 w-full h-[59px] bg-[#c0c0c0]"
+        className="mt-6 w-full h-[59px] bg-[#c0c0c0] dark:text-black"
         onClick={sendWhatsApp}
       >
         SEND BY WHATSAPP
       </Button>
-      <Button className="mt-6 w-full h-[59px] bg-[#c0c0c0]" onClick={sendEmail}>
+      <Button
+        className="mt-6 w-full h-[59px] bg-[#c0c0c0] dark:text-black"
+        onClick={sendEmail}
+      >
         SEND BY EMAIL
       </Button>
       <Button
         onClick={() => setShowQR(true)}
-        className="mt-6 w-full h-[59px] bg-[#c0c0c0]"
+        className="mt-6 w-full h-[59px] bg-[#c0c0c0] dark:text-black"
       >
         SCAN QR CODE
       </Button>
@@ -91,7 +98,7 @@ const ReviewRequest = () => {
             >
               <X size={24} />
             </button>
-            <h3 className="mb-4 text-lg font-semibold pt-2">
+            <h3 className="mb-4 text-lg font-semibold pt-2 dark:text-black">
               Scan to Leave a Review
             </h3>
             {reviewLink && (

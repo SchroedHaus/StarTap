@@ -1,8 +1,10 @@
+// UpdatePassword.jsx
 import { useState } from "react";
 import { supabase } from "../supabaseClient";
 import { useNavigate } from "react-router-dom";
 
 const UpdatePassword = () => {
+  const navigate = useNavigate();
   const [newPassword, setNewPassword] = useState("");
 
   async function handleUpdatePassword(e) {
@@ -16,7 +18,7 @@ const UpdatePassword = () => {
       alert(error.message);
     } else {
       alert("Password updated successfully!");
-        navigate('/review-request');
+      navigate("/review-request");
     }
   }
 
@@ -30,9 +32,14 @@ const UpdatePassword = () => {
         value={newPassword}
         onChange={(e) => setNewPassword(e.target.value)}
       />
-      <button onClick={handleUpdatePassword} className="bg-[#c0c0c0] h-[59px] w-full">Update Password</button>
+      <button
+        onClick={handleUpdatePassword}
+        className="bg-[#c0c0c0] h-[59px] w-full"
+      >
+        Update Password
+      </button>
     </div>
   );
-}
+};
 
 export default UpdatePassword;

@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from "react";
+// UserProfile.jsx
+import { useState, useEffect } from "react";
 import { supabase } from "../supabaseClient";
 import { userAuth } from "../context/Authcontext";
 import Button from "./Button";
@@ -261,7 +262,7 @@ const UserProfile = () => {
         <Button
           type="submit"
           disabled={loading}
-          className="mt-6 h-[59px] w-full bg-[#c0c0c0]"
+          className="mt-6 h-[59px] w-full bg-[#c0c0c0] dark:text-black"
         >
           {loading ? "Loading..." : "SAVE CHANGES"}
         </Button>
