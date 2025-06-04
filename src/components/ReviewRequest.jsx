@@ -8,9 +8,9 @@ import Button from "./Button";
 const ReviewRequest = () => {
   const { session } = userAuth();
   const [defaultMessage, setDefaultMessage] = useState("");
+  const [emailSubject, setEmailSubject] = useState("");
   const [logo, setLogo] = useState();
   const [reviewLink, setReviewLink] = useState("");
-  const [signature, setSignature] = useState("");
   const [showQR, setShowQR] = useState(false); // <- New state for overlay
 
   useEffect(() => {
@@ -19,7 +19,7 @@ const ReviewRequest = () => {
 
       const { data, error } = await supabase
         .from("profiles")
-        .select("message, logo_url, review_link, signature")
+        .select("message, logo_url, review_link, email_subject")
         .eq("id", session.user.id)
         .single();
 
@@ -29,30 +29,27 @@ const ReviewRequest = () => {
         setDefaultMessage(data.message || "");
         setLogo(data.logo_url);
         setReviewLink(data.review_link);
-        setSignature(data.signature);
+        setEmailSubject(data.email_subject);
       }
     };
 
     fetchProfile();
   }, [session]);
 
-  const reviewText = `${defaultMessage ? defaultMessage : ""}`;
-
   const sendSMS = () => {
-    window.location.href = `sms:?&body=${encodeURIComponent(reviewText)}`;
+    window.location.href = `sms:?&body=${encodeURIComponent(defaultMessage)}`;
   };
 
   const sendWhatsApp = () => {
     window.location.href = `https://wa.me/?text=${encodeURIComponent(
-      reviewText
+      defaultMessage
     )}`;
   };
 
   const sendEmail = () => {
-    const emailSubject = "Please leave a review";
     window.location.href = `mailto:?subject=${encodeURIComponent(
       emailSubject
-    )}&body=${encodeURIComponent(reviewText)}`;
+    )}&body=${encodeURIComponent(defaultMessage)}`;
   };
 
   return (

@@ -198,7 +198,7 @@ const UserProfile = () => {
               htmlFor="logo-upload"
               className="cursor-pointer px-4 py-2 bg-blue-600 text-white text-sm rounded text-center hover:bg-blue-700 transition"
             >
-              {profile.logo_url? <p>Change Logo</p> : <p>Upload Logo</p>}
+              {profile.logo_url ? <p>Change Logo</p> : <p>Upload Logo</p>}
             </label>
             <input
               id="logo-upload"
@@ -218,6 +218,18 @@ const UserProfile = () => {
               </a>
             )}
           </div>
+        </div>
+        <div className="mt-6">
+          <label>
+            Email subject line:
+            <input
+              type="text"
+              name="email_subject"
+              value={profile.email_subject}
+              onChange={handleChange}
+              className="border w-full p-2 rounded-sm"
+            ></input>
+          </label>
         </div>
         <div className="mt-6">
           <label>

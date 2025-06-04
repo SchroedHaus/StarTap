@@ -59,6 +59,9 @@ const Signin = () => {
             Sign in!
           </button>
           {error && <p className="text-red-600 text-center pt-4">{error}</p>}
+          <p className="pt-4 underline">
+            <Link to="/reset-password">Forgot your password?</Link>
+          </p>
         </div>
       </form>
     </div>
