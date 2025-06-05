@@ -7,6 +7,7 @@ import UserProfile from "./components/UserProfile";
 import ReviewRequest from "./components/ReviewRequest";
 import ResetPassword from "./components/ResetPassword";
 import UpdatePassword from "./components/UpdatePassword";
+import { Navigate } from "react-router-dom";
 
 export const router = createBrowserRouter([
   {
@@ -46,7 +47,7 @@ export const router = createBrowserRouter([
       // 🔥 Catch-all 404 route that redirects to sign in
       {
         path: "*",
-        element: <Navigate to="/signin" replace />,
+        element: <Signin />,
       },
     ],
   },
