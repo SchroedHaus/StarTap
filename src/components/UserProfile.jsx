@@ -265,6 +265,7 @@ const UserProfile = () => {
         <div className="mt-6">
           <label>
             Review Link for QR Code:
+            <p className="text-[12px]">include "http:// or https://"</p>
             <input
               type="url"
               name="review_link"
