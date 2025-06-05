@@ -7,7 +7,7 @@ import Button from "./Button";
 const UserProfile = () => {
   const { session } = userAuth();
   const [profile, setProfile] = useState({
-    name: "",
+    email_subject: "",
     message: "",
     review_link: "",
     logo_url: "",
@@ -17,6 +17,8 @@ const UserProfile = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [isDirty, setIsDirty] = useState(false);
+  const [successMessage, setSuccessMessage] = useState("");
+
 
   useEffect(() => {
     if (session) {
@@ -78,10 +80,15 @@ const UserProfile = () => {
 
     if (error) {
       setError("Error updating profile: " + error.message);
+      setSuccessMessage("");
     } else {
       setError("");
       setOriginalLogoUrl(profile.logo_url || "");
       setNewLogoPath("");
+      setSuccessMessage("Profile updated successfully");
+      setTimeout(() => {
+        setSuccessMessage("");
+      }, 3000); // hides after 3 seconds
     }
     setLoading(false);
     setIsDirty(false);
@@ -227,6 +234,7 @@ const UserProfile = () => {
               type="text"
               name="email_subject"
               value={profile.email_subject}
+              placeholder="Please leave me a review"
               onChange={handleChange}
               className="border w-full p-2 rounded-sm"
             ></input>
@@ -266,6 +274,9 @@ const UserProfile = () => {
         >
           {loading ? "Loading..." : "SAVE CHANGES"}
         </Button>
+        {successMessage && (
+          <p className="text-green-600 mt-2">{successMessage}</p>
+        )}
       </form>
       <a
         href="#"
