@@ -43,6 +43,11 @@ export const router = createBrowserRouter([
         path: "/update-password",
         element: <UpdatePassword />,
       },
+      // 🔥 Catch-all 404 route that redirects to sign in
+      {
+        path: "*",
+        element: <Navigate to="/signin" replace />,
+      },
     ],
   },
 ]);
