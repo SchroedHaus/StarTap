@@ -148,6 +148,14 @@ const UserProfile = () => {
   };
 
   const handleDeleteAccount = async () => {
+    const confirmDelete = window.confirm(
+      "Are you sure you want to delete your account? This action cannot be undone."
+    );
+
+    if (!confirmDelete) {
+      return; // exit if user cancels
+    }
+
     const {
       data: { user },
     } = await supabase.auth.getUser();
